@@ -13,6 +13,13 @@ on:
       dockerFileUrl:
         description: '自定义DockerFile下载路径,可空'
         required: false
+      platforms:
+        description: '自定义DockerFile下载路径,可空'
+        required: false
+        default: |
+            linux/amd64
+            linux/arm64/v8
+        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -51,11 +58,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.inputs.imageName }}:latest
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.inputs.imageName }}:${{steps.date.outputs.time}}
-          platforms: |
-            linux/amd64
-            linux/arm/v6
-            linux/arm/v7
-            linux/arm64/v8
+          platforms: ${{github.event.inputs.platforms}}
       
       # 打印 docker 镜像 SHA256 Hash 值
       - name: Image digest
