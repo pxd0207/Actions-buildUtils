@@ -14,7 +14,7 @@ on:
         description: '自定义DockerFile下载路径,可空'
         required: false
       platforms:
-        description: '自定义DockerFile下载路径,可空'
+        description: '需要构建的平台,逗号分隔'
         required: false
         default: |
             linux/amd64
