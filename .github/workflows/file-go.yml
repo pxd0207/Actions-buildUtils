@@ -70,6 +70,8 @@ jobs:
         run: |
           rm -rf dist
           mkdir dist
+          cat > /tmp/run.sh <- EOF
+          #!/bin/bash
           platforms=${{ github.event.inputs.platforms }}
           echo "all platforms: $platforms"
           platforms1=(${string//,/ })
@@ -81,7 +83,10 @@ jobs:
             CGO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o "dist/$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
           done
           wait
-          ls
+          EOF
+          chmod 777 /tmp/run.sh
+          exec /tmp/run.sh
+          ls -la dist
           tar -zcvf dist.tar.gz dist
 
       # 上传构建产物
