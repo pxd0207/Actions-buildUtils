@@ -85,6 +85,7 @@ jobs:
           wait
           EOF
           chmod 777 /tmp/run.sh
+          cat /tmp/run.sh
           exec /tmp/run.sh
           ls -la dist
           tar -zcvf dist.tar.gz dist
