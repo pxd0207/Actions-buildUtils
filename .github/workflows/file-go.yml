@@ -39,7 +39,6 @@ jobs:
       # 产生tag
       - name: Generate tag
         id: tag
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
           tag=$(date +'%m-%d_%H-%M-%S')
           [ ! "${{github.event.inputs.UPLOAD_TAG}}" = "" ] && tag=${{github.event.inputs.UPLOAD_TAG}}
