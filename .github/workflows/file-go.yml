@@ -74,9 +74,11 @@ jobs:
           cat > /tmp/run.sh <<- EOF
           #!/bin/bash
           echo "all platforms: $platforms"
-          platforms1=(\${string//,/ })
           f(){
+            platforms1=(\${string//,/ })
+            echo "all platforms1: $platforms1"
             for platforms2 in \${dirs[*]}; do
+              echo "all platforms2: $platforms2"
               p=(\${platforms2//,/ })
               OS="${p[0]}"
               ARCH="${p[1]}"
