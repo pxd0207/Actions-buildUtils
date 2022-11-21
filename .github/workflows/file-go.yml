@@ -75,7 +75,7 @@ jobs:
       # 上传到奶牛
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: github.event.inputs.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+        if: github.event.inputs.UPLOAD_COWTRANSFER == 'true' && !failure() && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress dist 2>&1 | tee cowtransfer.log
@@ -85,7 +85,7 @@ jobs:
       # 上传到WeTransfer
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: github.event.inputs.UPLOAD_WETRANSFER == 'true' && !cancelled()
+        if: github.event.inputs.UPLOAD_WETRANSFER == 'true' && !failure() && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress dist 2>&1 | tee wetransfer.log
@@ -103,8 +103,8 @@ jobs:
           
       # 生成release
       - name: Upload firmware to release
-        uses: softprops/action-gh-release@v1
-        if: github.event.inputs.UPLOAD_RELEASE == 'true' && !cancelled()
+        uses: softprops/action-gh-release@main
+        if: github.event.inputs.UPLOAD_RELEASE == 'true' && !failure() && !cancelled()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
