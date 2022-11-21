@@ -69,9 +69,8 @@ jobs:
       - name: Upload firmware directory
         uses: actions/upload-artifact@main
         with:
-          name: ${{ steps.tag.tag.tag }}
-          body_path: release.txt
-          path: dist/*
+          name: ${{ steps.tag.outputs.tag }}
+          path: dist
 
       # 上传到奶牛
       - name: Upload firmware to cowtransfer
@@ -106,7 +105,6 @@ jobs:
       # 生成release
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
-        if: steps.tag.outputs.status == 'success' && !cancelled()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
