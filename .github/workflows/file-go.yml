@@ -80,7 +80,7 @@ jobs:
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress "${{ steps.tag.outputs.tag }}" 2>&1 | tee cowtransfer.log
-          echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+          echo "cowtransfer url: $(cat cowtransfer.log | grep https)" >> $GITHUB_STATE
           echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
 
       # 上传到WeTransfer
@@ -90,7 +90,7 @@ jobs:
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress "${{ steps.tag.outputs.tag }}" 2>&1 | tee wetransfer.log
-          echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+           echo "cowtransfer url: $(cat wetransfer.log | grep https)" >> $GITHUB_OUTPUT
           echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
       # 产生release 的信息
