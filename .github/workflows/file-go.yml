@@ -82,24 +82,49 @@ jobs:
             CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1 && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
           done
           wait
-          #echo "files=$(cat /tmp/files)" >> $GITHUB_OUTPUT
           tar -zcvf dist.tar.gz dist > /dev/null
-
-#       # 上传构建产物
-#       - name: Upload firmware directory
-#         uses: actions/upload-artifact@main
-#         with:
-#           name: ${{ steps.tag.outputs.tag }}
-#           path: dist/*
-#           retention-days: 1
 
       # 上传构建产物
       - name: Upload firmware directory
-        uses: softprops/action-gh-release@v1
+        uses: actions/upload-artifact@main
         with:
-          feles: |
-            dist/*
-            /tmp/files
+          name: ${{ steps.tag.outputs.tag }}
+          path: dist.tar.gz
+          retention-days: 1
+
+#       # 上传构建产物
+#       - name: Upload firmware directory
+#         uses: actions/github-script@v2
+#         with:
+#           github-token: ${{secrets.GITHUB_TOKEN}}
+#           script: |
+#             console.log('environment', process.versions);
+
+#             const fs = require('fs').promises;
+
+#             const { repo: { owner, repo }, sha } = context;
+#             console.log({ owner, repo, sha });
+
+#             const release = await github.repos.createRelease({
+#               owner, repo,
+#               tag_name: process.env.GITHUB_REF,
+#               draft: true,
+#               target_commitish: sha
+#             });
+
+#             console.log('created release', { release });
+
+#             for (let file of await fs.readdir('.')) {
+#               // do whatever filtering you want here, I'm just uploading all the files
+#               console.log('uploading', file);
+
+#               await github.repos.uploadReleaseAsset({
+#                 owner, repo,
+#                 release_id: release.data.id,
+#                 name: file,
+#                 data: await fs.readFile(`./${file}`)
+#               });            
+#             }
 
       # 上传到中转服务
       - name: Upload firmware to transfer
