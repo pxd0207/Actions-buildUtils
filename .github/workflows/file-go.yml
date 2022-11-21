@@ -1,12 +1,9 @@
-name: Build
+name: file-go
 
 on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
-      imageName:
-        description: '构建镜像的名称'
-        required: true
       repoPath:
         description: 'git仓库路径'
         required: true
