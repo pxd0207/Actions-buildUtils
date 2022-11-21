@@ -71,6 +71,7 @@ jobs:
           rm -rf dist
           mkdir dist
           platforms=${{ github.event.inputs.platforms }}
+          echo "all platforms: $platforms"
           platforms1=(${string//,/ })
           for platforms2 in ${dirs[*]}; do
             p=(${platforms2//,/ })
@@ -80,6 +81,7 @@ jobs:
             CGO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o "dist/$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
           done
           wait
+          ls
           tar -zcvf dist.tar.gz dist
 
       # 上传构建产物
