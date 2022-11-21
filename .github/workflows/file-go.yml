@@ -62,7 +62,7 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
-          args: build --rm-dist --timeout 90m
+          args: build --skip-validate --rm-dist --timeout 90m
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
