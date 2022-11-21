@@ -91,11 +91,7 @@ jobs:
       - name: Upload firmware directory
         uses: actions/upload-artifact@main
         with:
-          name: ${{ steps.tag.outputs.tag }}
-          path: |
-            dist/linux_amd64
-            dist/linux_arm64
-            dist/linux_386
+          path: dist/*
           retention-days: 1
 
       # 上传到中转服务
