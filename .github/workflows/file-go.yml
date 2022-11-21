@@ -75,7 +75,7 @@ jobs:
           #!/bin/bash
           echo "all platforms: $platforms"
           f(){
-            platforms1=(\${string//,/ })
+            platforms1=(\${platforms//,/ })
             echo "all platforms1: $platforms1"
             for platforms2 in \${dirs[*]}; do
               echo "all platforms2: $platforms2"
