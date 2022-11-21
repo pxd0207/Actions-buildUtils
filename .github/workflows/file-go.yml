@@ -77,8 +77,8 @@ jobs:
             p=(${platforms2//,/ })
             OS="${p[0]}"
             ARCH="${p[1]}"
-            echo "strart build $platforms2 -> $OS_$ARCH"
-            CGO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o "dist/$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
+            echo "strart build $platforms2 -> ${OS}_${ARCH}"
+            CGO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o "dist/${OS}_${ARCH}" -ldflags="-w -s" -v &
           done
           wait
           ls -la dist
