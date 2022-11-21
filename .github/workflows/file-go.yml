@@ -95,15 +95,11 @@ jobs:
 
       # 上传构建产物
       - name: Upload firmware directory
-        run: |
-          set -x
-          assets=()
-          for asset in dist/*; do
-            assets+=("-a" "$asset")
-          done
-          hub release create "${assets[@]}" -m "${{ steps.tag.outputs.tag }}" "${{ steps.tag.outputs.tag }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          feles: |
+            dist/*
+            /tmp/files
 
       # 上传到中转服务
       - name: Upload firmware to transfer
