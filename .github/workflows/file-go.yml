@@ -17,15 +17,15 @@ on:
       UPLOAD_COWTRANSFER:
         description: '是否上传到奶牛快传'
         required: false
-        default: false
+        default: 'false'
       UPLOAD_WERANSFER:
         description: '是否上传到WERANSFER'
         required: false
-        default: false
+        default: 'false'
       UPLOAD_RELEASE:
         description: '是否上传到RELEASE页面'
         required: false
-        default: false
+        default: 'false'
       UPLOAD_TAG:
         description: '上传文件用的TAG,默认使用构建时间'
         required: false
