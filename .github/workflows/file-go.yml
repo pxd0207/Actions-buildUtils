@@ -101,7 +101,7 @@ jobs:
           for asset in dist/*; do
             assets+=("-a" "$asset")
           done
-          hub release create "${assets[@]}" -m "" "${{ steps.tag.outputs.tag }}"
+          hub release create "${assets[@]}" -m "${{ steps.tag.outputs.tag }}" ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
