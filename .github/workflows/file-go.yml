@@ -78,7 +78,7 @@ jobs:
         if: github.event.inputs.UPLOAD_COWTRANSFER == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer cow --block 2621440 -s -p 64 --no-progress "${{ steps.tag.outputs.tag }}" 2>&1 | tee cowtransfer.log
+          ./transfer cow --block 2621440 -s -p 64 --no-progress dist 2>&1 | tee cowtransfer.log
           echo "cowtransfer url: $(cat cowtransfer.log | grep https)" >> $GITHUB_STATE
           echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
 
@@ -88,14 +88,13 @@ jobs:
         if: github.event.inputs.UPLOAD_WETRANSFER == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progress "${{ steps.tag.outputs.tag }}" 2>&1 | tee wetransfer.log
+          ./transfer wet -s -p 16 --no-progress dist 2>&1 | tee wetransfer.log
            echo "cowtransfer url: $(cat wetransfer.log | grep https)" >> $GITHUB_OUTPUT
           echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
       # 产生release 的信息
       - name: Generate release info
         id: release-tag
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
           touch release.txt
           [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
@@ -105,6 +104,7 @@ jobs:
       # 生成release
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
+        if: github.event.inputs.UPLOAD_RELEASE == 'true' && !cancelled()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
