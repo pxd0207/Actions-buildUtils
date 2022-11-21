@@ -89,7 +89,8 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: ${{ steps.tag.outputs.tag }}
-          path: dist
+          path: dist/*
+          retention-days: 1
 
       # 上传到中转服务
       - name: Upload firmware to transfer
@@ -119,10 +120,3 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           body_path: release.txt
           files: dist/*
-
-      # 设置构建产物保存有效期
-      - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
-        with:
-          retain_days: 1
-          keep_minimum_runs: 3
