@@ -78,7 +78,7 @@ jobs:
             V_OS="${p[0]}"
             V_ARCH="${p[1]}"
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
-            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" -v &
+            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" -v > /dev/null && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
           done
           wait
           ls -la dist
