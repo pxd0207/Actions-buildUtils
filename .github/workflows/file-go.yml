@@ -67,6 +67,7 @@ jobs:
 
       # 开始构建
       - name: Build
+        id: build
         run: |
           rm -rf dist
           mkdir dist
@@ -78,9 +79,11 @@ jobs:
             V_OS="${p[0]}"
             V_ARCH="${p[1]}"
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
+            echo "dist/${V_OS}_${V_ARCH}" >> /tmp/files
             CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" -v > /dev/null && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
           done
           wait
+          echo "files=$(cat /tmp/files)" >> $GITHUB_OUTPUT
           ls -la dist
           tar -zcvf dist.tar.gz dist
 
@@ -89,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: ${{ steps.tag.outputs.tag }}
-          path: dist/*
+          path: ${{ steps.tag.build.files }}
           retention-days: 1
 
       # 上传到中转服务
