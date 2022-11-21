@@ -70,7 +70,7 @@ jobs:
         run: |
           rm -rf dist
           mkdir dist
-          cat > /tmp/run.sh <- EOF
+          cat > /tmp/run.sh <<- EOF
           #!/bin/bash
           platforms=${{ github.event.inputs.platforms }}
           echo "all platforms: $platforms"
