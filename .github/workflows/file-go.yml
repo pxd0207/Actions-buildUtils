@@ -24,6 +24,10 @@ on:
       UPLOAD_TAG:
         description: '上传文件用的TAG,默认使用构建时间'
         required: false
+      platforms:
+        description: '需要构建的平台'
+        required: true
+        default: linux/amd64,linux/arm64,linux/386,darwin/arm64,darwin/amd64,windows/amd64
 
 jobs:
   build:
@@ -53,14 +57,30 @@ jobs:
         with:
           go-version: ${{ github.event.inputs.GO_VERSION }}
 
+#       # 开始构建
+#       - name: Run GoReleaser
+#         uses: goreleaser/goreleaser-action@v2
+#         with:
+#           args: build --skip-validate --rm-dist --timeout 90m
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # 开始构建
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
-        with:
-          args: build --skip-validate --rm-dist --timeout 90m
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+      - name: Build
+        run: |
+          rm -rf dist
+          mkdir dist
+          platforms=${{ github.event.inputs.platforms }}
+          platforms1=(${string//,/ })
+          for platforms2 in ${dirs[*]}; do
+            p=(${platforms2//,/ })
+            OS="${p[0]}"
+            ARCH="${p[1]}"
+            CGO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o "dist/$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
+          done
+          wait
+          tar -zcvf dist.tar.gz dist
+
       # 上传构建产物
       - name: Upload firmware directory
         uses: actions/upload-artifact@main
@@ -74,7 +94,7 @@ jobs:
         if: github.event.inputs.UPLOAD_TRANSFER && !failure() && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} -p 64 --no-progress dist/ 2>&1 | tee transfer.log
+          ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} -p 64 --no-progress dist.tar.gz 2>&1 | tee transfer.log
           echo "::warning file=transfer::$(cat transfer.log | grep https)"
           echo "url=$(cat transfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_OUTPUT
 
