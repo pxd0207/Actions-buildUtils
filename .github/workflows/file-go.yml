@@ -79,7 +79,7 @@ jobs:
             V_ARCH="${p[1]}"
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
             echo "dist/${V_OS}_${V_ARCH}" >> /tmp/files
-            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" -v &2>1 > /dev/null && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
+            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" &2>1 > /dev/null && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
           done
           wait
           cat /tmp/files
