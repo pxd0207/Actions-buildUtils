@@ -89,7 +89,7 @@ jobs:
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress dist 2>&1 | tee wetransfer.log
-          echo "cowtransfer url: $(cat wetransfer.log | grep https)" >> $GITHUB_OUTPUT
+          echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
           echo "name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"  >> $GITHUB_OUTPUT
 
       # 产生release 的信息
