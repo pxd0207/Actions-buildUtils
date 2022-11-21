@@ -70,17 +70,17 @@ jobs:
         run: |
           rm -rf dist
           mkdir dist
+          platforms=${{ github.event.inputs.platforms }}
           cat > /tmp/run.sh <<- EOF
           #!/bin/bash
-          platforms=${{ github.event.inputs.platforms }}
           echo "all platforms: $platforms"
-          platforms1=(${string//,/ })
-          for platforms2 in ${dirs[*]}; do
-            p=(${platforms2//,/ })
+          platforms1=(\${string//,/ })
+          for platforms2 in \${dirs[*]}; do
+            p=(\${platforms2//,/ })
             OS="${p[0]}"
             ARCH="${p[1]}"
-            echo "strart build $platforms2"
-            CGO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o "dist/$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
+            echo "strart build \$platforms2"
+            CGO_ENABLED=0 GOOS=\$OS GOARCH=\$ARCH go build -o "dist/\$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
           done
           wait
           EOF
