@@ -14,14 +14,9 @@ on:
         description: 'go版本'
         required: false
         default: '1.19'
-      UPLOAD_COWTRANSFER:
-        description: '是否上传到奶牛快传'
+      UPLOAD_TRANSFER:
+        description: '上传服务,如wet,见github.com/Mikubill/transfer#support'
         required: false
-        default: 'false'
-      UPLOAD_WERANSFER:
-        description: '是否上传到WERANSFER'
-        required: false
-        default: 'false'
       UPLOAD_RELEASE:
         description: '是否上传到RELEASE页面'
         required: false
@@ -72,25 +67,15 @@ jobs:
           name: ${{ steps.tag.outputs.tag }}
           path: dist
 
-      # 上传到奶牛
-      - name: Upload firmware to cowtransfer
+      # 上传到中转服务
+      - name: Upload firmware to transfer
         id: cowtransfer
-        if: github.event.inputs.UPLOAD_COWTRANSFER == 'true' && !failure() && !cancelled()
+        if: github.event.inputs.UPLOAD_TRANSFER && !failure() && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer cow --block 2621440 -s -p 64 --no-progress dist 2>&1 | tee cowtransfer.log
+          ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} --block 2621440 -s -p 64 --no-progress dist 2>&1 | tee cowtransfer.log
           echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
           echo "url=$(cat cowtransfer.log | grep https | cut -f3 -d" ")" >>
-
-      # 上传到WeTransfer
-      - name: Upload firmware to WeTransfer
-        id: wetransfer
-        if: github.event.inputs.UPLOAD_WETRANSFER == 'true' && !failure() && !cancelled()
-        run: |
-          curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progress dist 2>&1 | tee wetransfer.log
-          echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-          echo "name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"  >> $GITHUB_OUTPUT
 
       # 产生release 的信息
       - name: Generate release info
