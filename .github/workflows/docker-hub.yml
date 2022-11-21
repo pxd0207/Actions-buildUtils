@@ -1,4 +1,4 @@
-name: Build
+name: docker-hub
 
 on:
   repository_dispatch:
