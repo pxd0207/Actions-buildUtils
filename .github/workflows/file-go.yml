@@ -75,13 +75,17 @@ jobs:
           #!/bin/bash
           echo "all platforms: $platforms"
           platforms1=(\${string//,/ })
-          for platforms2 in \${dirs[*]}; do
-            p=(\${platforms2//,/ })
-            OS="${p[0]}"
-            ARCH="${p[1]}"
-            echo "strart build \$platforms2"
-            CGO_ENABLED=0 GOOS=\$OS GOARCH=\$ARCH go build -o "dist/\$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
-          done
+          f(){
+            for platforms2 in \${dirs[*]}; do
+              p=(\${platforms2//,/ })
+              OS="${p[0]}"
+              ARCH="${p[1]}"
+              echo "strart build \$platforms2"
+              CGO_ENABLED=0 GOOS=\$OS GOARCH=\$ARCH go build -o "dist/\$OS_$ARCH" -buildmode=pie -ldflags="-w -s" -v &
+            done
+            wait
+          }
+          f
           wait
           EOF
           chmod 777 /tmp/run.sh
