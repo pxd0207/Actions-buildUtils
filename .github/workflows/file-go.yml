@@ -79,20 +79,31 @@ jobs:
             V_ARCH="${p[1]}"
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
             echo "dist/${V_OS}_${V_ARCH}" >> /tmp/files
-            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
+            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1 && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
           done
           wait
-          cat /tmp/files
           #echo "files=$(cat /tmp/files)" >> $GITHUB_OUTPUT
           tar -zcvf dist.tar.gz dist > /dev/null
 
+#       # 上传构建产物
+#       - name: Upload firmware directory
+#         uses: actions/upload-artifact@main
+#         with:
+#           name: ${{ steps.tag.outputs.tag }}
+#           path: dist/*
+#           retention-days: 1
+
       # 上传构建产物
       - name: Upload firmware directory
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ steps.tag.outputs.tag }}
-          path: dist/*
-          retention-days: 1
+        run: |
+          set -x
+          assets=()
+          for asset in dist/*; do
+            assets+=("-a" "$asset")
+          done
+          hub release create "${assets[@]}" -m "" "${{ steps.tag.outputs.tag }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 上传到中转服务
       - name: Upload firmware to transfer
