@@ -137,7 +137,7 @@ jobs:
         if: github.event.inputs.UPLOAD_TRANSFER && !failure() && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} -p 64 --no-progress dist.tar.gz 2>&1 | tee transfer.log
+          ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} --no-progress dist.tar.gz 2>&1 | tee transfer.log
           url=$(cat transfer.log | grep https | cut -f3 -d" ")
           echo "🔗 transfer download: [$url]($url)" >> release.txt
           echo "::warning file=transfer::$(cat transfer.log | grep https)"
