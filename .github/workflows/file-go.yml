@@ -27,7 +27,7 @@ on:
       platforms:
         description: '需要构建的平台'
         required: true
-        default: linux/amd64,linux/arm64,linux/386,windows/amd64
+        default: linux/amd64,linux/arm64
 
 jobs:
   build:
@@ -138,9 +138,9 @@ jobs:
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} --no-progress dist.tar.gz 2>&1 | tee transfer.log
-          url=$(cat transfer.log | grep https | cut -f3 -d" ")
-          echo "🔗 transfer download: [$url]($url)" >> release.txt
-          echo "::warning file=transfer::$(cat transfer.log | grep https)"
+          url="External $(cat transfer.log | grep https)"
+          echo "🔗 [$url]($url)" >> release.txt
+          echo "::warning file=transfer::$url"
 
       # 生成release
       - name: Upload firmware to release
