@@ -142,7 +142,7 @@ jobs:
           ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} --no-progress dist.tar.gz 2>&1 | tee transfer.log
           url=$(cat transfer.log | grep https | cut -f3 -d" ")
           echo "🔗 External Download Link: $url" >> release.txt
-          echo "::warning file=transfer::External Download Link: $url"
+          echo "::warning ::External Download Link: $url"
 
       # 生成release
       - name: Upload firmware to release
