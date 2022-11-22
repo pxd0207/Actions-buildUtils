@@ -86,7 +86,7 @@ jobs:
           end=$(date +%s)
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
-          echo "use time: $take" >> release.txt
+          echo "use time: $take s" >> release.txt
           echo >> release.txt
           tar -zcvf dist.tar.gz dist > /dev/null
 
