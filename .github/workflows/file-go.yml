@@ -83,7 +83,7 @@ jobs:
             echo "dist/${V_OS}_${V_ARCH}" >> /tmp/files
             CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1  \
             && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" \
-            && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" &
+            && echo "::notice ::$platforms2 -> ${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" &
           done
           wait
           end=$(date +%s)
