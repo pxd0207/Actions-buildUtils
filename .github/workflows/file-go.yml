@@ -43,17 +43,18 @@ jobs:
           [ ! "${{github.event.inputs.UPLOAD_TAG}}" = "" ] && tag=${{github.event.inputs.UPLOAD_TAG}}
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
+      # 设置go环境
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ github.event.inputs.GO_VERSION }}
+
       # 克隆目标,并且准备上下文
       - name: Git clone
         run: |
          rm -rf {*,.[^.]*,..?*}
          git clone "${{github.event.inputs.repoPath}}" .
          if [[ "${{ github.event.inputs.shellUrl }}" ]] ;then wget "${{github.event.inputs.shellUrl}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{ github.event.inputs.GO_VERSION }}
 
 #       # 开始构建
 #       - name: Run GoReleaser
