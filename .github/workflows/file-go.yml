@@ -70,7 +70,7 @@ jobs:
         run: |
           rm -rf dist
           mkdir dist
-          echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')" > release.txt
+          echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')\n" > release.txt
           start=$(date +%s)
           platforms=${{ github.event.inputs.platforms }}
           echo "all platforms: $platforms"
@@ -82,14 +82,15 @@ jobs:
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
             echo "dist/${V_OS}_${V_ARCH}" >> /tmp/files
             CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1  \
-            && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" \
+            && echo "build over $platforms2 -> ${V_OS}_${V_ARCH} use $(( $(date +%s) - start ))s" \
+            && echo "${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" >> release.txt \
             && echo "::notice ::$platforms2 -> ${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" &
           done
           wait
           end=$(date +%s)
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
-          echo "use time: ${take}s" >> release.txt
+          echo "all build use ${take}s" >> release.txt
           echo >> release.txt
           tar -zcvf dist.tar.gz dist > /dev/null
 
