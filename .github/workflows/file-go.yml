@@ -73,7 +73,7 @@ jobs:
           echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')\n" > release.txt
           start=$(date +%s)
           platforms=${{ github.event.inputs.platforms }}
-          echo "all platforms: $platforms"
+          echo "start build at $start, all platforms: $platforms"
           platforms1=(${platforms//,/ })
           for platforms2 in ${platforms1[*]}; do
             p=(${platforms2//\// })
