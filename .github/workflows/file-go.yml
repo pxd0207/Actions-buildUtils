@@ -80,13 +80,15 @@ jobs:
             V_ARCH="${p[1]}"
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
             echo "dist/${V_OS}_${V_ARCH}" >> /tmp/files
-            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1 && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" &
+            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1  \
+            && echo "build over $platforms2 -> ${V_OS}_${V_ARCH}" \
+            && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" &
           done
           wait
           end=$(date +%s)
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
-          echo "use time: $take s" >> release.txt
+          echo "use time: ${take}s" >> release.txt
           echo >> release.txt
           tar -zcvf dist.tar.gz dist > /dev/null
 
@@ -138,9 +140,9 @@ jobs:
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer ${{ github.event.inputs.UPLOAD_TRANSFER }} --no-progress dist.tar.gz 2>&1 | tee transfer.log
-          url="External $(cat transfer.log | grep https)"
-          echo "🔗 [$url]($url)" >> release.txt
-          echo "::warning file=transfer::$url"
+          url=$(cat transfer.log | grep https | cut -f3 -d" ")
+          echo "🔗 External Download Link: $url" >> release.txt
+          echo "::warning file=transfer::External Download Link: $url"
 
       # 生成release
       - name: Upload firmware to release
