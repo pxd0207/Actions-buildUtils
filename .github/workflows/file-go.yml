@@ -68,8 +68,8 @@ jobs:
       - name: Build
         id: build
         run: |
-          rm -rf /dist
-          mkdir /dist
+          rm -rf /tmp/dist
+          mkdir /tmp/dist
           echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')\n" > release.txt
           start=$(date +%s)
           platforms=${{ github.event.inputs.platforms }}
@@ -92,7 +92,7 @@ jobs:
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
           echo "all build use ${take}s" >> release.txt
           echo >> release.txt
-          tar -zcvf dist.tar.gz /dist > /dev/null
+          tar -zcvf dist.tar.gz /tmp/dist > /dev/null
 
       # 上传构建产物
       - name: Upload firmware directory
@@ -155,4 +155,4 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           body_path: release.txt
-          files: /dist/*
+          files: /tmp/dist/*
