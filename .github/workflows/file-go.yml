@@ -7,8 +7,11 @@ on:
       repoPath:
         description: 'git仓库路径'
         required: true
+      shell:
+        description: '自定义构建前运行的shell'
+        required: false
       shellUrl:
-        description: '自定义构建前脚本下载路径,可空'
+        description: '自定义构建前脚本下载路径'
         required: false
       GO_VERSION:
         description: 'go版本'
