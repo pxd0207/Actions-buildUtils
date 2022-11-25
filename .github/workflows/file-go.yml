@@ -57,6 +57,7 @@ jobs:
         run: |
          rm -rf {*,.[^.]*,..?*}
          git clone "${{github.event.inputs.repoPath}}" .
+         if [[ "${{ github.event.inputs.shell }}" ]] ;then ${{github.event.inputs.shellUrl}} fi
          if [[ "${{ github.event.inputs.shellUrl }}" ]] ;then wget "${{github.event.inputs.shellUrl}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
 
 #       # 开始构建
