@@ -69,7 +69,8 @@ jobs:
         id: build
         run: |
           rm -rf /tmp/dist
-          mkdir /tmp/dist
+          mkdir -p /tmp/dist
+          mkdir -p /tmp/build_log
           echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')\n" > release.txt
           start=$(date +%s)
           platforms=${{ github.event.inputs.platforms }}
