@@ -80,7 +80,7 @@ jobs:
             V_OS="${p[0]}"
             V_ARCH="${p[1]}"
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
-            echo "dist/${V_OS}_${V_ARCH}" >> /tmp/files
+            echo "/tmp/dist/${V_OS}_${V_ARCH}" >> /tmp/files
             CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "/dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1  \
             && echo "build over $platforms2 -> ${V_OS}_${V_ARCH} use $(( $(date +%s) - start ))s" \
             && echo "${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" >> release.txt \
