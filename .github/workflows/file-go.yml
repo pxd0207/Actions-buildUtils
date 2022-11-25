@@ -98,7 +98,7 @@ jobs:
           tar -zcvf dist.tar.gz dist > /dev/null
 
       # 上传构建日志
-      - name: Upload firmware directory
+      - name: Upload build logs
         uses: actions/upload-artifact@main
         with:
           name: log_${{ steps.tag.outputs.tag }}
