@@ -81,10 +81,11 @@ jobs:
             V_ARCH="${p[1]}"
             echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
             echo "/tmp/dist/${V_OS}_${V_ARCH}" >> /tmp/files
-            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "/tmp/dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > /dev/null 2>&1  \
+            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "/tmp/dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > "/tmp/build_log/${V_OS}_${V_ARCH}.log" 2>&1  \
             && echo "build over $platforms2 -> ${V_OS}_${V_ARCH} use $(( $(date +%s) - start ))s" \
             && echo "${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" >> release.txt \
-            && echo "::notice ::$platforms2 -> ${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" &
+            && echo "::notice ::$platforms2 -> ${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" \
+            || (echo "::error ::build fail $platforms2 -> ${V_OS}_${V_ARCH} use $(( $(date +%s) - start ))s" && cat /tmp/build_log/${V_OS}_${V_ARCH}.log) &
           done
           wait
           end=$(date +%s)
@@ -92,8 +93,16 @@ jobs:
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
           echo "all build use ${take}s" >> release.txt
           echo >> release.txt
-          cp /tmp/dist/ dist
+          cp -r /tmp/dist/ dist
           tar -zcvf dist.tar.gz dist > /dev/null
+
+      # 上传构建日志
+      - name: Upload firmware directory
+        uses: actions/upload-artifact@main
+        with:
+          name: log_${{ steps.tag.outputs.tag }}
+          path: /tmp/build_log
+          retention-days: 1
 
       # 上传构建产物
       - name: Upload firmware directory
@@ -102,6 +111,7 @@ jobs:
           name: ${{ steps.tag.outputs.tag }}
           path: dist.tar.gz
           retention-days: 1
+          
 
 #       # 上传构建产物
 #       - name: Upload firmware directory
