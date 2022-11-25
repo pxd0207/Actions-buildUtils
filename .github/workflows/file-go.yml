@@ -92,7 +92,8 @@ jobs:
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
           echo "all build use ${take}s" >> release.txt
           echo >> release.txt
-          tar -zcvf dist.tar.gz /tmp/dist > /dev/null
+          cp /tmp/dist/ dist
+          tar -zcvf dist.tar.gz dist > /dev/null
 
       # 上传构建产物
       - name: Upload firmware directory
@@ -155,4 +156,4 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           body_path: release.txt
-          files: /tmp/dist/*
+          files: dist/*
