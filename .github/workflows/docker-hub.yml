@@ -59,8 +59,8 @@ jobs:
           arr=(${image//\// })
           image=""
           var_len=${#arr[*]}
-          var_start=`expr $len - 2`
-          var_end=`expr $var_len - 1`
+          var_start=$(($var_len - 2))
+          var_end=$(($var_len - 1))
           for ((i=$var_start; i<=$var_end ; i ++)); do image="${image}/${arr[$i]}"; done
           echo "format image name"
           echo "image=${image:1}" | tee -a $GITHUB_OUTPUT
