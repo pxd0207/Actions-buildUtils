@@ -21,7 +21,7 @@ on:
         required: false
         default: linux/amd64,linux/arm64/v8
       tags:
-        description: '自定义dockerTags,逗号分隔'
+        description: '自定义dockerTags,逗号分隔,默认为时间'
         required: false
 jobs:
   build:
