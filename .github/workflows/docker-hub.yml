@@ -54,6 +54,7 @@ jobs:
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           image="${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.inputs.imageName }}"
+          echo "original image $image"
           arr=(${image//\// })
           image=""
           len=${#arr[*]}
@@ -62,6 +63,7 @@ jobs:
           for((i=start; i<=end ; i ++));do
              image="$image/${arr[$i]}"
           done
+          echo "format image name"
           echo "image=${image:1}" | tee -a $GITHUB_OUTPUT
           echo "tag=$(date +'%m-%d_%H-%M-%S')" | tee -a $GITHUB_OUTPUT
 
