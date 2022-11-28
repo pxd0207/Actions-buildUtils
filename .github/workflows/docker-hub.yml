@@ -59,9 +59,9 @@ jobs:
           arr=(${image//\// })
           image=""
           len=${#arr[*]}
-          start=`expr $len - 2`
-          end=`expr $len - 1`
-          for((i=start; i<=end ; i ++)); do image="$image/${arr[$i]}"; done
+          var_start=`expr $len - 2`
+          var_end=`expr $len - 1`
+          for((i=var_start; i<=var_end ; i ++)); do image="$image/${arr[$i]}"; done
           echo "format image name"
           echo "image=${image:1}" | tee -a $GITHUB_OUTPUT
           echo "tag=$(date +'%m-%d_%H-%M-%S')" | tee -a $GITHUB_OUTPUT
