@@ -20,13 +20,21 @@ on:
         description: '需要构建的平台'
         required: false
         default: linux/amd64,linux/arm64/v8
-        
+      tags:
+        description: '自定义dockerTags,逗号分隔'
+        required: false
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out
         uses: actions/checkout@v3
+
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Asia/Singapore"
+          timezoneMacos: "Asia/Singapore"
+          timezoneWindows: "Singapore Standard Time"
 
       # 克隆目标,并且准备上下文
       - name: Git clone
@@ -60,9 +68,14 @@ jobs:
           var_start=$(($var_len - 2))
           var_end=$(($var_len - 1))
           for ((i=$var_start; i<=$var_end ; i ++)); do image="${image}/${arr[$i]}"; done
-          echo "format image name"
-          echo "image=${image:1}" | tee -a $GITHUB_OUTPUT
-          echo "tag=$(date +'%m-%d_%H-%M-%S')" | tee -a $GITHUB_OUTPUT
+          image=${image:1}
+          tags="image:latest,$image:$(date +'%m-%d_%H-%M-%S')"
+          t="${{github.event.inputs.tags}}"
+          if [[ "$t" ]] ; then
+            arr=(${t//,/ })
+            for t in ${arr[*]}; do image="${image}/$t"; done
+          fi
+          echo "target images $tags"
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes > /dev/null 2>&1
 
       # build 并且 push docker 镜像
@@ -73,9 +86,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: |
-            ${{steps.docker_before.outputs.image}}:latest
-            ${{steps.docker_before.outputs.image}}:${{steps.docker_before.outputs.tag}}
+          tags: ${{steps.docker_before.outputs.tags}}
           platforms: ${{github.event.inputs.platforms}}
       
       # 打印 docker 镜像 SHA256 Hash 值
