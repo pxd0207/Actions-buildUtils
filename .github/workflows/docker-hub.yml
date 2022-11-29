@@ -1,4 +1,4 @@
-name: docker-hub
+name: '构建镜像并推送到dockerhub'
 
 on:
   repository_dispatch:
