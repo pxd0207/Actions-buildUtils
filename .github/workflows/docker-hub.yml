@@ -1,4 +1,4 @@
-name: '构建镜像并推送到dockerhub'
+name: '构建镜像并推送至dockerhub'
 
 on:
   repository_dispatch:
