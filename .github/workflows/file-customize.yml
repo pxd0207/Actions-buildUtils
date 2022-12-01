@@ -4,9 +4,6 @@ on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
-      repoPath:
-        description: 'git仓库路径'
-        required: true
       SETTING_SEHLL_URL:
         description: '设置构建环境的shell地址'
         required: false
