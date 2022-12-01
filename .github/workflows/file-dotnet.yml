@@ -89,6 +89,7 @@ jobs:
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
           echo -e "all build use ${take}s\n" >> release.txt
+          echo ""::notice ::all build use $(( $(date +%s) - start ))s"
           tar -zcvf dist.tar.gz -C /tmp/dist/ $(ls /tmp/dist) > /dev/null
 
       # 上传构建日志
