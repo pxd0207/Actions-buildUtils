@@ -10,8 +10,8 @@ fork本仓库
 ![image](https://user-images.githubusercontent.com/43053461/204208295-4004ee4a-30dc-4e7f-9587-5c8f9edb52cd.png)
 
 重要参数 
-- `DOCKER_HUB_USERNAME`
-- `DOCKER_HUB_ACCESS_TOKEN`
+- `DOCKER_HUB_USERNAME` docker-hub 用户名
+- `DOCKER_HUB_ACCESS_TOKEN` docker-hub 读写权限token或者密码
 
 ### 构建
 
