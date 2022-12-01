@@ -1,4 +1,4 @@
-name: '构建多架构.net工程并提供下载'
+name: '.net构建并下载'
 
 on:
   repository_dispatch:
