@@ -80,7 +80,7 @@ jobs:
             && echo "build over $platforms2 use $(( $(date +%s) - start ))s" \
             && echo "${platforms2} build use $(( $(date +%s) - start ))s" >> release.txt \
             && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" \
-            && tar -zcvf /tmp/dist/${platforms2}.tar.gz -C /tmp/dist_tmp/${platforms2}/ * > /dev/null \
+            && tar -zcvf /tmp/dist/${platforms2}.tar.gz -C /tmp/dist_tmp/${platforms2}/ $(ls /tmp/dist_tmp/${platforms2}) > /dev/null \
             || (echo "::error ::build fail $platforms2 use $(( $(date +%s) - start ))s" && cat /tmp/build_log/${platforms2}.log) &
           done
           wait
@@ -89,7 +89,7 @@ jobs:
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
           echo "all build use ${take}s" >> release.txt
           echo >> release.txt
-          tar -zcvf dist.tar.gz -C /tmp/dist/ * > /dev/null
+          tar -zcvf dist.tar.gz -C /tmp/dist/ $(/tmp/dist) > /dev/null
 
       # 上传构建日志
       - name: Upload build logs
