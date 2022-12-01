@@ -87,9 +87,10 @@ jobs:
           end=$(date +%s)
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
-          echo "all build use ${take}s" >> release.txt
-          echo >> release.txt
-          tar -zcvf dist.tar.gz -C /tmp/dist/ $(/tmp/dist) > /dev/null
+          echo -e "all build use ${take}s\n" >> release.txt
+          
+          ls -la /tmp/dist
+          tar -zcvf dist.tar.gz -C /tmp/dist/ $(ls /tmp/dist) > /dev/null
 
       # 上传构建日志
       - name: Upload build logs
