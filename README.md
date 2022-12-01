@@ -11,7 +11,7 @@ fork本仓库
 
 重要参数 
 - `DOCKER_HUB_USERNAME` docker-hub 用户名
-- `DOCKER_HUB_ACCESS_TOKEN` docker-hub 读写权限token或者密码
+- `DOCKER_HUB_ACCESS_TOKEN` docker-hub 读写权限token或者密码,建议使用token
 
 ### 构建
 
