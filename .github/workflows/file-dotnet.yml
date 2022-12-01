@@ -89,8 +89,7 @@ jobs:
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
           echo "all build use ${take}s" >> release.txt
           echo >> release.txt
-          cp -r /tmp/dist/ dist
-          tar -zcvf dist.tar.gz -C dist * > /dev/null
+          tar -zcvf dist.tar.gz -C /tmp/dist * > /dev/null
 
       # 上传构建日志
       - name: Upload build logs
