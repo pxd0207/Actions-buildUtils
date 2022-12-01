@@ -1,4 +1,4 @@
-name: '构建多架构go工程并提供下载'
+name: 'go构建并下载'
 
 on:
   repository_dispatch:
