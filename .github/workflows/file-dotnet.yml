@@ -72,15 +72,15 @@ jobs:
           platforms=${{ github.event.inputs.platforms }}
           echo "start build at $start, all platforms: $platforms"
           platforms1=(${platforms//,/ })
-          if [[ "${{ github.event.inputs.shell }}" ]] ;then "${{github.event.inputs.shell}}" ; fi
+          if [[ "${{ github.event.inputs.shell }}" ]] ;then ""${{github.event.inputs.shell}} ; fi
           for platforms2 in ${platforms1[*]}; do
             echo "strart build $platforms2"
             echo "/tmp/dist/${platforms2}" >> /tmp/files
             dotnet publish -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -o "/tmp/dist_tmp/${platforms2}" > "/tmp/build_log/${platforms2}.log" 2>&1  \
-            && echo "build over $platforms2 } use $(( $(date +%s) - start ))s" \
+            && echo "build over $platforms2 use $(( $(date +%s) - start ))s" \
             && echo "${platforms2} build use $(( $(date +%s) - start ))s" >> release.txt \
             && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" \
-            && sh -c "cd /tmp/dist_tmp/${platforms2} && tar -zcvf /tmp/dist/${platforms2}.tar.gz ./* > /dev/null" \
+            && sh -c "cd /tmp/dist_tmp/${platforms2} && tar -zcvf /tmp/dist/${platforms2}.tar.gz * > /dev/null" \
             || (echo "::error ::build fail $platforms2 use $(( $(date +%s) - start ))s" && cat /tmp/build_log/${platforms2}.log) &
           done
           wait
@@ -90,7 +90,7 @@ jobs:
           echo "all build use ${take}s" >> release.txt
           echo >> release.txt
           cp -r /tmp/dist/ dist
-          tar -zcvf dist.tar.gz dist > /dev/null
+          tar -zcvf dist.tar.gz -C dist * > /dev/null
 
       # 上传构建日志
       - name: Upload build logs
