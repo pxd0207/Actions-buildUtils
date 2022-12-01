@@ -42,7 +42,7 @@ jobs:
       - name: Generate tag
         id: tag
         run: |
-          tag=build-$(date +'%m-%d_%H-%M-%S')
+          tag=build-go_$(date +'%m-%d_%H-%M-%S')
           [ ! "${{github.event.inputs.UPLOAD_TAG}}" = "" ] && tag=${{github.event.inputs.UPLOAD_TAG}}
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
