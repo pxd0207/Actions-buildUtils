@@ -79,7 +79,7 @@ jobs:
           platforms=${{ github.event.inputs.platforms }}
           echo "start build at $start, all platforms: $platforms"
           platforms1=(${platforms//,/ })
-          if [[ "${{ github.event.inputs.shell }}" ]] ;then ${{github.event.inputs.shell}} ; fi
+          if [[ "${{ github.event.inputs.shell }}" ]] ;then "${{github.event.inputs.shell}}" ; fi
           for platforms2 in ${platforms1[*]}; do
             p=(${platforms2//\// })
             V_OS="${p[0]}"
