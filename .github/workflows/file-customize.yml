@@ -14,7 +14,7 @@ on:
         description: '构建前shell地址'
         required: false
       BUILD_SHELL_URL:
-        description: '构建shell命令,输出要求输出文件'
+        description: '构建shell命令'
         required: true
       BUILD_AFTER_SHELL_URL:
         description: '构建后shell命令'
