@@ -67,6 +67,7 @@ jobs:
           mkdir -p /tmp/dist
           mkdir -p /tmp/dist_tmp
           mkdir -p /tmp/build_log
+          mkdir -p /tmp/src
           echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')\n" > release.txt
           start=$(date +%s)
           platforms=${{ github.event.inputs.platforms }}
@@ -76,7 +77,8 @@ jobs:
           for platforms2 in ${platforms1[*]}; do
             echo "strart build $platforms2"
             echo "/tmp/dist/${platforms2}" >> /tmp/files
-            dotnet publish -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -o "/tmp/dist_tmp/${platforms2}" > "/tmp/build_log/${platforms2}.log" 2>&1  \
+            cp -r ./* /tmp/src/${platforms2}/&& cd /tmp/src/${platforms2}\
+            && dotnet publish -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -o "/tmp/dist_tmp/${platforms2}" > "/tmp/build_log/${platforms2}.log" 2>&1  \
             && echo "build over $platforms2 use $(( $(date +%s) - start ))s" \
             && echo "${platforms2} build use $(( $(date +%s) - start ))s" >> release.txt \
             && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" \
