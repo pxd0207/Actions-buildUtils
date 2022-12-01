@@ -76,7 +76,7 @@ jobs:
           for platforms2 in ${platforms1[*]}; do
             echo "strart build $platforms2"
             echo "/tmp/dist/${platforms2}" >> /tmp/files
-            dotnet publish -c Release  --use-current-runtime -p:PublishSingleFile=true -p:PublishTrimmed=true -o "/tmp/dist_tmp/${platforms2}" -ldflags="-w -s" > "/tmp/build_log/${platforms2}.log" 2>&1  \
+            dotnet publish -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -o "/tmp/dist_tmp/${platforms2}" > "/tmp/build_log/${platforms2}.log" 2>&1  \
             && echo "build over $platforms2 } use $(( $(date +%s) - start ))s" \
             && echo "${platforms2} build use $(( $(date +%s) - start ))s" >> release.txt \
             && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" \
