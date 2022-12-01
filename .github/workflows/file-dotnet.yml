@@ -74,13 +74,14 @@ jobs:
           platforms1=(${platforms//,/ })
           if [[ "${{ github.event.inputs.shell }}" ]] ;then ""${{github.event.inputs.shell}} ; fi
           for platforms2 in ${platforms1[*]}; do
+            start1=$(date +%s)
             echo "strart build $platforms2"
             echo "/tmp/dist/${platforms2}" >> /tmp/files
             # mkdir -p /tmp/src/${platforms2} &&cp -r ./* /tmp/src/${platforms2}/&& cd /tmp/src/${platforms2} &&\
             dotnet publish -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -o "/tmp/dist_tmp/${platforms2}" > "/tmp/build_log/${platforms2}.log" 2>&1  \
             && echo "build over $platforms2 use $(( $(date +%s) - start ))s" \
             && echo "${platforms2} build use $(( $(date +%s) - start ))s" >> release.txt \
-            && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" \
+            && echo "::notice ::$platforms2 build use $(( $(date +%s) - start1 ))s" \
             && tar -zcvf /tmp/dist/${platforms2}.tar.gz -C /tmp/dist_tmp/${platforms2}/ $(ls /tmp/dist_tmp/${platforms2}) > /dev/null \
             || (echo "::error ::build fail $platforms2 use $(( $(date +%s) - start ))s" && cat /tmp/build_log/${platforms2}.log)
           done
