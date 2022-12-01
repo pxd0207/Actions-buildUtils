@@ -16,7 +16,7 @@ on:
       DOTNET_VERSION:
         description: '.net版本'
         required: false
-        default: '6.0.x'
+        default: '6.x'
       UPLOAD_TRANSFER:
         description: '上传服务,如wet,见github.com/Mikubill/transfer#support'
         required: false
