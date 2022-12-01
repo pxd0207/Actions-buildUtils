@@ -80,7 +80,7 @@ jobs:
             && echo "build over $platforms2 use $(( $(date +%s) - start ))s" \
             && echo "${platforms2} build use $(( $(date +%s) - start ))s" >> release.txt \
             && echo "::notice ::$platforms2 build use $(( $(date +%s) - start ))s" \
-            && sh -c "cd /tmp/dist_tmp/${platforms2} && tar -zcvf /tmp/dist/${platforms2}.tar.gz * > /dev/null" \
+            && tar -zcvf /tmp/dist/${platforms2}.tar.gz -C /tmp/dist_tmp/${platforms2} * > /dev/null \
             || (echo "::error ::build fail $platforms2 use $(( $(date +%s) - start ))s" && cat /tmp/build_log/${platforms2}.log) &
           done
           wait
@@ -126,4 +126,4 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           body_path: release.txt
-          files: dist/*
+          files: /tmp/dist/*
