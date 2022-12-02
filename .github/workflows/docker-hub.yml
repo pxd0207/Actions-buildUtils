@@ -19,7 +19,7 @@ on:
       platforms:
         description: '需要构建的平台'
         required: false
-        default: linux/amd64,linux/arm64/v8
+        default: linux/amd64,linux/arm64/v8,linux/arm/v7
       tags:
         description: '自定义dockerTags,逗号分隔,默认为时间'
         required: false
