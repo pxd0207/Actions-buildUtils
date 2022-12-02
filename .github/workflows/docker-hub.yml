@@ -16,10 +16,13 @@ on:
       shellUrl:
         description: '自定义构建前脚本下载路径,可空'
         required: false
+      shell:
+        description: '构建前运行shell命令,执行mv Dockerfile等操作'
+        required: false
       platforms:
         description: '需要构建的平台'
         required: false
-        default: linux/amd64,linux/arm64/v8,linux/arm/v7
+        default: linux/amd64,linux/arm64/v8
       tags:
         description: '自定义dockerTags,逗号分隔,默认为时间'
         required: false
@@ -42,6 +45,7 @@ jobs:
          git clone "${{github.event.inputs.repoPath}}" .
          if [[ "${{ github.event.inputs.dockerFileUrl }}" ]] ;then wget "${{github.event.inputs.dockerFileUrl}}" -O ./Dockerfile ; fi
          if [[ "${{ github.event.inputs.shellUrl }}" ]] ;then wget "${{github.event.inputs.shellUrl}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
+         if [[ "${{ github.event.inputs.shell }}" ]] ;then ""${{github.event.inputs.shell}} ; fi
 
       # docker login
       - name: Login to Docker Hub
