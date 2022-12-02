@@ -11,7 +11,7 @@ on:
         description: '构建前运行脚本url'
         required: false
       shell:
-        description: '构建前运行shell命令'
+        description: '构建前运行shell命令:cd,go mod等'
         required: false
       GO_VERSION:
         description: 'go版本'
