@@ -6,6 +6,7 @@ on:
     inputs:
       imageName:
         description: '构建镜像的名称'
+        type: secrets
         required: true
       repoPath:
         description: 'git仓库路径'
