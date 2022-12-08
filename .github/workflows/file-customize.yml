@@ -11,10 +11,10 @@ on:
         description: '构建前shell地址'
         required: false
       BUILD_SHELL_URL:
-        description: '构建shell命令'
+        description: '构建shell命令地址'
         required: true
       BUILD_AFTER_SHELL_URL:
-        description: '构建后shell命令'
+        description: '构建后shell命令地址'
         required: false
       BUILD_TARGET_PATH:
         description: '构建产物路径'
@@ -27,6 +27,7 @@ on:
         description: '是否上传到RELEASE页面'
         required: false
         default: 'false'
+        type: boolean
       UPLOAD_TAG:
         description: '上传文件用的TAG,默认使用构建时间'
         required: false
