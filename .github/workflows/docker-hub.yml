@@ -26,7 +26,7 @@ on:
       tags:
         description: '自定义dockerTags,逗号分隔,默认为时间'
         required: false
-      tempUsername:
+      tmpUsername:
         description: '用户名,覆盖环境变量,可空'
         required: false
         type: secrets
@@ -57,8 +57,8 @@ jobs:
          if [[ "${{ github.event.inputs.shell }}" ]] ;then ""${{github.event.inputs.shell}} ; fi
          githubUsername=${{ secrets.DOCKER_HUB_USERNAME }}
          githubPassword=${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-         if [[ "${{ github.event.inputs.tempUsername }}" ]] ;then githubUsername="${{github.event.inputs.tmpUsername}}" ; fi
-         if [[ "${{ github.event.inputs.tempToken }}" ]] ;then githubPassword="${{github.event.inputs.tmpToken}}" ; fi
+         if [[ "${{ github.event.inputs.tmpUsername }}" ]] ;then githubUsername="${{github.event.inputs.tmpUsername}}" ; fi
+         if [[ "${{ github.event.inputs.tmpToken }}" ]] ;then githubPassword="${{github.event.inputs.tmpToken}}" ; fi
          echo "githubUsername=$githubUsername" >> $GITHUB_OUTPUT
          echo "githubPassword=$githubPassword" >> $GITHUB_OUTPUT
 
