@@ -23,6 +23,7 @@ on:
       UPLOAD_RELEASE:
         description: '是否上传到RELEASE页面'
         required: false
+        type: boolean
         default: 'false'
       UPLOAD_TAG:
         description: '上传文件用的TAG,默认使用构建时间'
