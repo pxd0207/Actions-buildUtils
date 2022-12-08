@@ -6,18 +6,15 @@ on:
     inputs:
       imageName:
         description: '构建镜像的名称'
-        type: secrets
         required: true
       repoPath:
         description: 'git仓库路径'
         required: true
       dockerFileUrl:
         description: '自定义DockerFile下载路径,可空'
-        type: secrets
         required: false
       shellUrl:
         description: '自定义构建前脚本下载路径,可空'
-        type: secrets
         required: false
       shell:
         description: '构建前运行shell命令,执行mv Dockerfile等操作'
