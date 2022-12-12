@@ -21,3 +21,15 @@ fork本仓库
 ![image](https://user-images.githubusercontent.com/43053461/204228180-34b77c57-05f8-4707-bf7e-02d75b6b315e.png)
 
 快乐白嫖
+
+### 私有库
+
+github: 
+首先创建token
+https://github.com/settings/tokens/new
+
+git地址写法`https://oauth2:<token>@github.com/name/repo`
+
+其它git服务
+
+git地址写法`https://<username>:<password>@<url>`
