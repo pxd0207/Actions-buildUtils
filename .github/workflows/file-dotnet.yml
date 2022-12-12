@@ -1,4 +1,4 @@
-name: 'go构建并下载'
+name: 'c#构建并下载'
 
 on:
   repository_dispatch:
@@ -11,17 +11,17 @@ on:
         description: '构建前运行脚本url'
         required: false
       shell:
-        description: '构建前运行shell命令:cd,go mod等'
+        description: '构建前运行shell命令,cd或者restore等'
         required: false
-      GO_VERSION:
-        description: 'go版本'
+      DOTNET_VERSION:
+        description: '.net版本'
         required: false
-        default: '1.19'
+        default: '6.x'
       UPLOAD_RELEASE:
         description: '是否上传到RELEASE页面'
         required: false
-        type: boolean
         default: 'false'
+        type: boolean
       UPLOAD_TRANSFER:
         description: '上传服务,如wet,见github.com/Mikubill/transfer#support'
         required: false
@@ -29,9 +29,9 @@ on:
         description: '上传文件用的TAG,默认使用构建时间'
         required: false
       platforms:
-        description: '需要构建的平台'
+        description: '需要构建的架构'
         required: true
-        default: linux/amd64,linux/arm64
+        default: win-x64,linux-x64,linux-arm64
 
 jobs:
   build:
@@ -43,15 +43,15 @@ jobs:
       - name: Generate tag
         id: tag
         run: |
-          tag=build-go_$(date +'%m-%d_%H-%M-%S')
+          tag=build-dotnet_$(date +'%m-%d_%H-%M-%S')
           [ ! "${{github.event.inputs.UPLOAD_TAG}}" = "" ] && tag=${{github.event.inputs.UPLOAD_TAG}}
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
-      # 设置go环境
-      - name: Set up Go
-        uses: actions/setup-go@v3
+      # 设置构建环境依赖
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
         with:
-          go-version: ${{ github.event.inputs.GO_VERSION }}
+          dotnet-version: ${{ github.event.inputs.DOTNET_VERSION }}
 
       # 克隆目标,并且准备上下文
       - name: Git clone
@@ -60,21 +60,15 @@ jobs:
          git clone "${{github.event.inputs.repoPath}}" .
          if [[ "${{ github.event.inputs.shellUrl }}" ]] ;then wget "${{github.event.inputs.shellUrl}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
 
-#       # 开始构建
-#       - name: Run GoReleaser
-#         uses: goreleaser/goreleaser-action@v2
-#         with:
-#           args: build --skip-validate --rm-dist --timeout 90m
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # 开始构建
       - name: Build
         id: build
         run: |
           rm -rf /tmp/dist
           mkdir -p /tmp/dist
+          mkdir -p /tmp/dist_tmp
           mkdir -p /tmp/build_log
+          dotnet restore
           echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')\n" > release.txt
           start=$(date +%s)
           platforms=${{ github.event.inputs.platforms }}
@@ -82,23 +76,24 @@ jobs:
           platforms1=(${platforms//,/ })
           if [[ "${{ github.event.inputs.shell }}" ]] ;then ""${{github.event.inputs.shell}} ; fi
           for platforms2 in ${platforms1[*]}; do
-            p=(${platforms2//\// })
-            V_OS="${p[0]}"
-            V_ARCH="${p[1]}"
-            echo "strart build $platforms2 -> ${V_OS}_${V_ARCH}"
-            echo "/tmp/dist/${V_OS}_${V_ARCH}" >> /tmp/files
-            CGO_ENABLED=0 GOOS=${V_OS} GOARCH=${V_ARCH} go build -o "/tmp/dist/${V_OS}_${V_ARCH}" -ldflags="-w -s" > "/tmp/build_log/${V_OS}_${V_ARCH}.log" 2>&1  \
-            && echo "build over $platforms2 -> ${V_OS}_${V_ARCH} use $(( $(date +%s) - start ))s" \
-            && echo "${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" >> release.txt \
-            && echo "::notice ::$platforms2 -> ${V_OS}_${V_ARCH} build use $(( $(date +%s) - start ))s" \
-            || (echo "::error ::build fail $platforms2 -> ${V_OS}_${V_ARCH} use $(( $(date +%s) - start ))s" && cat /tmp/build_log/${V_OS}_${V_ARCH}.log) &
+            start1=$(date +%s)
+            echo "strart build $platforms2"
+            echo "/tmp/dist/${platforms2}" >> /tmp/files
+            # mkdir -p /tmp/src/${platforms2} &&cp -r ./* /tmp/src/${platforms2}/&& cd /tmp/src/${platforms2} &&\
+            dotnet publish -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -o "/tmp/dist_tmp/${platforms2}" > "/tmp/build_log/${platforms2}.log" 2>&1  \
+            && echo "build over $platforms2 use $(( $(date +%s) - start ))s" \
+            && echo "${platforms2} build use $(( $(date +%s) - start ))s" >> release.txt \
+            && echo "::notice ::$platforms2 build use $(( $(date +%s) - start1 ))s" \
+            && tar -zcvf /tmp/dist/${platforms2}.tar.gz -C /tmp/dist_tmp/${platforms2}/ $(ls /tmp/dist_tmp/${platforms2}) > /dev/null \
+            || (echo "::error ::build fail $platforms2 use $(( $(date +%s) - start ))s" && cat /tmp/build_log/${platforms2}.log)
           done
           wait
           end=$(date +%s)
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
           echo -e "all build use ${take}s\n" >> release.txt
-          tar -zcvf dist.tar.gz -C /tmp/dist $(ls /tmp/dist) > /dev/null
+          echo "::notice ::all build use $(( $(date +%s) - start ))s"
+          tar -zcvf dist.tar.gz -C /tmp/dist/ $(ls /tmp/dist) > /dev/null
 
       # 上传构建日志
       - name: Upload build logs
@@ -115,41 +110,6 @@ jobs:
           name: ${{ steps.tag.outputs.tag }}
           path: dist.tar.gz
           retention-days: 1
-          
-
-#       # 上传构建产物
-#       - name: Upload firmware directory
-#         uses: actions/github-script@v2
-#         with:
-#           github-token: ${{secrets.GITHUB_TOKEN}}
-#           script: |
-#             console.log('environment', process.versions);
-
-#             const fs = require('fs').promises;
-
-#             const { repo: { owner, repo }, sha } = context;
-#             console.log({ owner, repo, sha });
-
-#             const release = await github.repos.createRelease({
-#               owner, repo,
-#               tag_name: process.env.GITHUB_REF,
-#               draft: true,
-#               target_commitish: sha
-#             });
-
-#             console.log('created release', { release });
-
-#             for (let file of await fs.readdir('.')) {
-#               // do whatever filtering you want here, I'm just uploading all the files
-#               console.log('uploading', file);
-
-#               await github.repos.uploadReleaseAsset({
-#                 owner, repo,
-#                 release_id: release.data.id,
-#                 name: file,
-#                 data: await fs.readFile(`./${file}`)
-#               });            
-#             }
 
       # 上传到中转服务
       - name: Upload firmware to transfer
