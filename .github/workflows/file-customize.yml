@@ -54,10 +54,10 @@ jobs:
           mkdir -p /tmp/dist
           echo -e "github actions build\nstart time: $(date +'%Y-%m-%d %H:%M:%S')\n" > release.txt
           start=$(date +%s)
-          if [[ "${{ github.event.inputs.SETTING_SEHLL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
-          if [[ "${{ github.event.inputs.BUILD_BEFORE_SHELL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
-          wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh
-          if [[ "${{ github.event.inputs.BUILD_AFTER_SHELL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
+          if [[ "${{ github.event.inputs.SETTING_SEHLL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh | tee /tmp/build_log/setting.log; fi
+          if [[ "${{ github.event.inputs.BUILD_BEFORE_SHELL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh | tee /tmp/build_log/before.log; fi
+          wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh | tee /tmp/build_log/build.log
+          if [[ "${{ github.event.inputs.BUILD_AFTER_SHELL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh | tee /tmp/build_log/after.log; fi
           end=$(date +%s)
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
