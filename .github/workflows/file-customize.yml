@@ -19,7 +19,7 @@ on:
       BUILD_TARGET_PATH:
         description: '构建产物路径'
         required: true
-        default: './*'
+        default: './dist/*'
       UPLOAD_RELEASE:
         description: '是否上传到RELEASE页面'
         required: false
@@ -57,7 +57,7 @@ jobs:
           if [[ "${{ github.event.inputs.SETTING_SEHLL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
           if [[ "${{ github.event.inputs.BUILD_BEFORE_SHELL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
           wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh
-          if [[ "${{ github.event.inputs.BUILD_AFTER_SHELL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh
+          if [[ "${{ github.event.inputs.BUILD_AFTER_SHELL_URL }}" ]] ;then wget "${{github.event.inputs.SETTING_SEHLL_URL}}" -O /tmp/.customize_shell.sh ; chmod +x /tmp/.customize_shell.sh && /tmp/.customize_shell.sh; fi
           end=$(date +%s)
           take=$(( end - start ))
           echo "end time: $(date +'%Y-%m-%d %H:%M:%S')" >> release.txt
